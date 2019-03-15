@@ -222,7 +222,6 @@ $(document).ready(function() {
     }
 
     // Create a globe
-    // let globe = new WorldWind.WorldWindow("canvas-globe");
     let globe = new Globe("canvas-globe");
     // Add layers to the globe
     // Add layers ordered by drawing order: first to last
