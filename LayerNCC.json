@@ -1,0 +1,50 @@
+[
+  {
+    "Location": "Alaska, USA",
+    "Site_Name": "Kodiak High School Wind Turbine",
+    "Site_Description": "The Kodiak High School wind turbine is located next to the City Borough building across from the high school and produces about 120 kilowatts per month. This Skystream wind turbine costs $3,000 and includes monitoring software so that data can be monitored and recorded remotely. Kodiak's - A World Bridge students have connected to the wind turbine's data stream via radio transmitter, then relay this data through a CPU in the World Bridge lab that parses the output to send finalized data to a host server.",
+    "Latitude_and_Longitude_DegMinSec": "",
+    "Latitude_and_Longitude_Decimal": "57.793083,-152.397157",
+    "Link_to_site_location": "http://24.237.235.227/wwdev/CitySmart/GraphPage.html",
+    "Picture_Location": "KHS_Turbine.jpg",
+    "Copyright": "TrilliumLearning",
+    "Layer_Name": "KHS_Turbine",
+    "Color": "rgb(204,204,255) rgb(0,0,255) rgb(204,204,255)"
+  },
+  {
+    "Location": "Middletown, USA",
+    "Site_Name": "Potato Cheese",
+    "Site_Description": "This is where cheese makes their dreams come true through special effects because of suphalapskoik ness ness potato sausage baby.",
+    "Latitude_and_Longitude_DegMinSec": "",
+    "Latitude_and_Longitude_Decimal": "41.452233, 74.437348",
+    "Link_to_site_location": "https://theuselessweb.com/",
+    "Picture_Location": "unitato.png",
+    "Copyright": "NOU",
+    "Layer_Name": "ok",
+    "Color": "rgb(204,204,255) rgb(0,0,255) rgb(204,204,255)"
+  },
+  {
+    "Location": "Middletown, USA",
+    "Site_Name": "Potato Cheese",
+    "Site_Description": "This is where cheese makes their dreams come true through special effects because of suphalapskoik ness ness potato sausage baby.",
+    "Latitude_and_Longitude_DegMinSec": "",
+    "Latitude_and_Longitude_Decimal": "41.452233, 74.437348",
+    "Link_to_site_location": "https://theuselessweb.com/",
+    "Picture_Location": "unitato.png",
+    "Copyright": "NOU",
+    "Layer_Name": "ko",
+    "Color": "rgb(204,204,255) rgb(0,0,255) rgb(204,204,255)"
+  },
+  {
+    "Location": "Middletown, USA",
+    "Site_Name": "Potato Cheese",
+    "Site_Description": "This is where cheese makes their dreams come true through special effects because of suphalapskoik ness ness potato sausage baby.",
+    "Latitude_and_Longitude_DegMinSec": "",
+    "Latitude_and_Longitude_Decimal": "41.452233, 74.437348",
+    "Link_to_site_location": "https://theuselessweb.com/",
+    "Picture_Location": "NasaLogo.png",
+    "Copyright": "NOU",
+    "Layer_Name": "no",
+    "Color": "rgb(204,204,255) rgb(0,0,255) rgb(204,204,255)"
+  }
+]
