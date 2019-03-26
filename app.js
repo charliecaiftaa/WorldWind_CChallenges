@@ -223,6 +223,7 @@ $(document).ready(function() {
 
     // Create a globe
     let globe = new Globe("canvas-globe");
+    // let globe = new WorldWind.WorldWindow("canvas-globe");
     // Add layers to the globe
     // Add layers ordered by drawing order: first to last
     globe.addLayer(new WorldWind.BMNGLayer(), {
@@ -273,7 +274,6 @@ $(document).ready(function() {
         displayName: "no"
     });
 
-
     // Create the view models
     let layers = new LayersViewModel(globe);
     let settings = new SettingsViewModel(globe);
@@ -298,7 +298,7 @@ $(document).ready(function() {
     // WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
 
     // Create the World Window.
-    // var globe = new WorldWind.WorldWindow("canvas-globe");
+    var wwd = new WorldWind.WorldWindow("canvas-globe");
 
     // Add standard imagery layers.
     var layerss = [
@@ -306,16 +306,14 @@ $(document).ready(function() {
         {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
         {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
         {layer: new WorldWind.CompassLayer(), enabled: true},
-        {layer: new WorldWind.CoordinatesDisplayLayer(globe), enabled: true},
-        {layer: new WorldWind.ViewControlsLayer(globe), enabled: true}
+        {layer: new WorldWind.CoordinatesDisplayLayer(wwd), enabled: true},
+        {layer: new WorldWind.ViewControlsLayer(wwd), enabled: true}
     ];
 
     for (var l = 0; l < layerss.length; l++) {
         layerss[l].layer.enabled = layerss[l].enabled;
-        globe.addLayer(layerss[l].layer);
+        wwd.addLayer(layerss[l].layer);
     }
-
-    
 
     var laname,
         j,
@@ -327,11 +325,11 @@ $(document).ready(function() {
     var LayerInfo = [], CoordinateLatInfo = [], CoordinateLongInfo = [], listLoca = [];
 
     // This wmsLayer used to be switch_right but it's different on this project so I changed it
-    $("input:checkbox").change(function() {
+    $('.switch_right').click(function() {
         var CurrentToggleVal = $(this).val();
         console.log("Initial:" + layerss.length);
         console.log(CurrentToggleVal);
-
+        // console.log($(this).prop('checked'));
         for (var b = 0; b < layerss.length; b++) {
             if (layerss[b].displayName === CurrentToggleVal) {
 
@@ -364,6 +362,12 @@ $(document).ready(function() {
                                 CreatePlacemarkLayer(locat, colo, laname);
                                 console.log("Ending Loop:" + layerss.length);
                                 // console.log ("displayN last: " + layers[layers.length-1].displayName);
+
+                                globe.addLayer(new WorldWind.Layer(), {
+                                    category: "placemark",
+                                    enabled: false,
+                                    displayName: "Hello"
+                                });
                             }
                         }
                     });
