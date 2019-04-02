@@ -161,6 +161,7 @@ $(document).ready(function() {
      * View model for the settings.
      * @param {Globe} globe - Our globe object (not a WorldWind.Globe)
      */
+
     function SettingsViewModel(globe) {
         var self = this;
         self.settingLayers = ko.observableArray(globe.getLayers('setting').reverse());
@@ -182,6 +183,7 @@ $(document).ready(function() {
     }
 
     function PlacemarksViewModel(globe) {
+        // console.log(this);
         var self = this;
         self.placemarkLayers = ko.observableArray(globe.getLayers('placemark').reverse());
 
@@ -193,7 +195,7 @@ $(document).ready(function() {
         self.loadLayers = function (layers, observableArray) {
             observableArray.removeAll();
             layers.reverse().forEach(layer => observableArray.push(layer));
-            console.log(observableArray);
+            // console.log(observableArray);
         };
 
         // Click event handler for the setting panel's buttons
@@ -227,7 +229,8 @@ $(document).ready(function() {
     // Add layers to the globe
     // Add layers ordered by drawing order: first to last
     globe.addLayer(new WorldWind.BMNGLayer(), {
-        category: "base"
+        category: "base",
+        enabled: false
     });
     globe.addLayer(new WorldWind.BMNGLandsatLayer(), {
         category: "base",
@@ -239,7 +242,7 @@ $(document).ready(function() {
     });
     globe.addLayer(new WorldWind.BingAerialWithLabelsLayer(), {
         category: "base",
-        enabled: false,
+        enabled: true,
         detailControl: 1.5
     });
     globe.addLayer(new WorldWind.BingRoadsLayer(), {
@@ -256,7 +259,7 @@ $(document).ready(function() {
     });
     globe.addLayer(new WorldWind.CompassLayer(), {
         category: "setting",
-        enabled: false
+        enabled: true
     });
     globe.addLayer(new WorldWind.StarFieldLayer(), {
         category: "setting",
@@ -271,8 +274,10 @@ $(document).ready(function() {
     globe.addLayer(new WorldWind.Layer(), {
         category: "placemark",
         enabled: false,
-        displayName: "no"
+        displayName: "nooo"
     });
+
+    // console.log(globe.wwd);
 
     // Create the view models
     let layers = new LayersViewModel(globe);
@@ -294,27 +299,6 @@ $(document).ready(function() {
         $(this).closest('.collapse').collapse('hide');
     });
 
-    // Tell World Wind to log only warnings.
-    // WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
-
-    // Create the World Window.
-    var wwd = new WorldWind.WorldWindow("canvas-globe");
-
-    // Add standard imagery layers.
-    var layerss = [
-        {layer: new WorldWind.BMNGLayer(), enabled: true},
-        {layer: new WorldWind.BMNGLandsatLayer(), enabled: false},
-        {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
-        {layer: new WorldWind.CompassLayer(), enabled: true},
-        {layer: new WorldWind.CoordinatesDisplayLayer(wwd), enabled: true},
-        {layer: new WorldWind.ViewControlsLayer(wwd), enabled: true}
-    ];
-
-    for (var l = 0; l < layerss.length; l++) {
-        layerss[l].layer.enabled = layerss[l].enabled;
-        wwd.addLayer(layerss[l].layer);
-    }
-
     var laname,
         j,
         loca,
@@ -327,31 +311,32 @@ $(document).ready(function() {
     // This wmsLayer used to be switch_right but it's different on this project so I changed it
     $('.switch_right').click(function() {
         var CurrentToggleVal = $(this).val();
-        console.log("Initial:" + layerss.length);
+        console.log("Initial:" + globe.wwd.layers.length);
         console.log(CurrentToggleVal);
-        // console.log($(this).prop('checked'));
-        for (var b = 0; b < layerss.length; b++) {
-            if (layerss[b].displayName === CurrentToggleVal) {
+        for (var b = 0; b < globe.wwd.layers.length; b++) {
+            if (globe.wwd.layers[b].displayName === CurrentToggleVal) {
 
                 if ($(this).prop('checked')) {
                     console.log("open");
-                    layerss[b].enabled = true;
+                    globe.wwd.layers[b].enabled = true;
 
                 } else {
                     console.log("closed");
-                    layerss[b].enabled = false;
+                    globe.wwd.layers[b].enabled = false;
 
                 }
                 break;
 
             } else {
-                if (b === layerss.length - 1) {
+                if (b === globe.wwd.layers.length - 1) {
                     console.log("new");
 
                     $.getJSON("LayerNCC.json", function (layer) {
+                        console.log("Sausage");
                         for (j = 0; j < layer.length; j++) {
-
+                            console.log("Banana");
                             if (CurrentToggleVal === layer[j].Layer_Name) {
+                                console.log("Potato");
                                 LayerInfo.push(layer[j]);
                                 loca = layer[j].Latitude_and_Longitude_Decimal;
                                 listLoca.push(loca);
@@ -360,14 +345,9 @@ $(document).ready(function() {
                                 colo = col.split(" ");
                                 laname = layer[j].Layer_Name;
                                 CreatePlacemarkLayer(locat, colo, laname);
-                                console.log("Ending Loop:" + layerss.length);
+                                console.log("Ending Loop:" + globe.wwd.layers.length);
                                 // console.log ("displayN last: " + layers[layers.length-1].displayName);
 
-                                globe.addLayer(new WorldWind.Layer(), {
-                                    category: "placemark",
-                                    enabled: false,
-                                    displayName: "Hello"
-                                });
                             }
                         }
                     });
@@ -378,6 +358,7 @@ $(document).ready(function() {
 
     //This is creating the placemark layer and to connect the placemark to the switch
     var CreatePlacemarkLayer = function (location, pcolor, lname) {
+        console.log("The Potato Famine was Intentional");
         var placemark;
         var placemarkAttributes;
         var highlightAttributes;
@@ -435,8 +416,8 @@ $(document).ready(function() {
         CoordinateLongInfo.push(placemark.position.longitude);
     };
 
-    // Now set up to handle highlighting.
-    var highlightController = new WorldWind.HighlightController(globe);
+    // // Now set up to handle highlighting.
+    // var highlightController = new WorldWind.HighlightController(globe);
 
     var sitePopUp = function(jsonobj) {
         var sitename, sitedesc, picpath, siteurl;
@@ -478,7 +459,7 @@ $(document).ready(function() {
         // relative to the upper left corner of the canvas rather than the upper left corner of the page.
 
         //This is the the Popup Box coordinate finder
-        var pickList = globe.pick(globe.canvasCoordinates(x, y));
+        var pickList = globe.wwd.pick(globe.wwd.canvasCoordinates(x, y));
         // console.log(pickList.objects[0]);
         for (var q = 0; q < pickList.objects.length; q++) {
             var pickedPL = pickList.objects[q].userObject;
@@ -489,7 +470,7 @@ $(document).ready(function() {
                 //alert("It Worked");
 
                 $(document).ready(function () {
-                    // console.log("It's connected");
+                    console.log("It's connected");
                     // Get the modal
                     var modal = document.getElementById('myModal');
 
@@ -517,7 +498,7 @@ $(document).ready(function() {
     };
 
     // Listen for mouse double clicks placemarks and then pop up a new dialog box.
-    globe.addEventListener("click", handleMouseCLK);
+    globe.wwd.addEventListener("click", handleMouseCLK);
 
     // Listen for taps on mobile devices and then pop up a new dialog box.
     var tapRecognizer = new WorldWind.TapRecognizer(globe, handleMouseCLK);

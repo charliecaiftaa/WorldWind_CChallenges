@@ -154,18 +154,18 @@
                         <p class="card-text">Placemark list goes here.</p>
                         <!--<div class="list-group" data-bind="template: { name: 'layer-list-template', foreach: overlayLayers}"></div>-->
                         <hr/>
-                        <!--<div class="list-group" data-bind="template: { name: 'layer-list-template', foreach: baseLayers}"></div>-->
-                        <!--<div class = "list-group" data-bind = "template: { name: 'layer-list-template', foreach: placemarkLayers}"></div>-->
-                        <div class = "list-group" data-bind = "template: { name: 'layer-list-template', foreach: placemarkLayers}">
-                            <input class = "switch_right" type = "checkbox" value = "no"/>
+                        <div class = "list-group switch_right" data-bind = "template: { name: 'layer-list-template', foreach: placemarkLayers}" value = "no">
+                            <!--<label>-->
+                                <!--<input value = "no"/>-->
+                            <!--</label>-->
                             <!--<input class="switch_right myModal" type = "checkbox" value = "no"/>-->
                             <!--<span class="slider round"></span>-->
                         </div>
 
                     </div>
                     <!--<label class="switch right">-->
-                    <input id = "place" type = "checkbox" value="ko"/>
-                    <input class = "switch_right" type = "checkbox" value = "on"/>
+                    <input class = "switch_right myModal" type = "checkbox" value = "ko"/>
+                    <input class = "switch_right myModal" type = "checkbox" value = "ok"/>
 
                     <!--<span class="slider round"></span>-->
                     <!--</label>-->
