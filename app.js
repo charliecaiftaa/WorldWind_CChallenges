@@ -30,6 +30,8 @@ $(document).ready(function() {
             // Holds the next unique id to be assigned to a layer
             this.nextLayerId = 1;
 
+            this.baseURL = "../images/Placemark_Images";
+
             // Holds a map of category and observable timestamp pairs
             this.categoryTimestamps = new Map();
 
@@ -42,6 +44,7 @@ $(document).ready(function() {
             });
 
         }
+
         /**
          * Returns an observable containing the last update timestamp for the category.
          * @param {String} category
@@ -73,7 +76,7 @@ $(document).ready(function() {
 
             // Multiplicity Rule: only [0..1] "base" layers can be enabled at a time
             if (layer.category === 'base') {
-                this.wwd.layers.forEach(function(item) {
+                this.wwd.layers.forEach(function (item) {
                     if (item.category === 'base' && item !== layer) {
                         item.enabled = false;
                     }
@@ -146,13 +149,13 @@ $(document).ready(function() {
             self.loadLayers(globe.getLayers('overlay'), self.overlayLayers));
 
         // Utility to load the layers in reverse order to show last rendered on top
-        self.loadLayers = function(layers, observableArray) {
+        self.loadLayers = function (layers, observableArray) {
             observableArray.removeAll();
             layers.reverse().forEach(layer => observableArray.push(layer));
         };
 
         // Click event handler for the layer panel's buttons
-        self.toggleLayer = function(layer) {
+        self.toggleLayer = function (layer) {
             globe.toggleLayer(layer);
         };
     }
@@ -171,19 +174,18 @@ $(document).ready(function() {
             self.loadLayers(globe.getLayers('setting'), self.settingLayers));
 
         // Utility to load layers in reverse order
-        self.loadLayers = function(layers, observableArray) {
+        self.loadLayers = function (layers, observableArray) {
             observableArray.removeAll();
             layers.reverse().forEach(layer => observableArray.push(layer));
         };
 
         // Click event handler for the setting panel's buttons
-        self.toggleLayer = function(layer) {
+        self.toggleLayer = function (layer) {
             globe.toggleLayer(layer);
         };
     }
 
     function PlacemarksViewModel(globe) {
-        // console.log(this);
         var self = this;
         self.placemarkLayers = ko.observableArray(globe.getLayers('placemark').reverse());
 
@@ -277,7 +279,6 @@ $(document).ready(function() {
         displayName: "nooo"
     });
 
-    // console.log(globe.wwd);
 
     // Create the view models
     let layers = new LayersViewModel(globe);
@@ -290,12 +291,12 @@ $(document).ready(function() {
     ko.applyBindings(placemarks, document.getElementById('placemarks'));
 
     // Auto-collapse the main menu when its button items are clicked
-    $('.navbar-collapse a[role="button"]').click(function() {
+    $('.navbar-collapse a[role="button"]').click(function () {
         $('.navbar-collapse').collapse('hide');
     });
 
     // Collapse card ancestors when the close icon is clicked
-    $('.collapse .close').on('click', function() {
+    $('.collapse .close').on('click', function () {
         $(this).closest('.collapse').collapse('hide');
     });
 
@@ -309,7 +310,7 @@ $(document).ready(function() {
     var LayerInfo = [], CoordinateLatInfo = [], CoordinateLongInfo = [], listLoca = [];
 
     // This wmsLayer used to be switch_right but it's different on this project so I changed it
-    $('.switch_right').click(function() {
+    $('.switch_right').click(function () {
         var CurrentToggleVal = $(this).val();
         console.log("Initial:" + globe.wwd.layers.length);
         console.log(CurrentToggleVal);
@@ -359,14 +360,68 @@ $(document).ready(function() {
     //This is creating the placemark layer and to connect the placemark to the switch
     var CreatePlacemarkLayer = function (location, pcolor, lname) {
         console.log("The Potato Famine was Intentional");
-        var placemark;
-        var placemarkAttributes;
-        var highlightAttributes;
+        // var placemark;
+        // var placemarkAttributes;
+        // var highlightAttributes;
+        //
+        // // Create the placemark.
+        // placemark = new WorldWind.Placemark(new WorldWind.Position(location[0], location[1], 1e2), false, null);
+        // //placemark.label = "This is a school" + SitesPL[i].SiteID; // NA,USA,1234
+        // placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
+        //
+        // // Create the custom image for the placemark.
+        // var canvas = document.createElement("canvas"),
+        //     ctx2d = canvas.getContext("2d"),
+        //     size = 64, c = size / 2 - 0.5, innerRadius = 5, outerRadius = 20;
+        //
+        // canvas.width = size;
+        // canvas.height = size;
+        //
+        // var gradient = ctx2d.createRadialGradient(c, c, innerRadius, c, c, outerRadius);
+        // gradient.addColorStop(0, pcolor[0]);
+        // gradient.addColorStop(0.5, pcolor[1]);
+        // gradient.addColorStop(1, pcolor[2]);
+        //
+        // ctx2d.fillStyle = gradient;
+        // ctx2d.arc(c, c, outerRadius, 0, 2 * Math.PI, false);
+        // ctx2d.fill();
+        //
+        // // Create the placemark attributes for the placemark.
+        // placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
+        // // The line of code above used to have a (placemarkAttributes) in the PlacemarkAttributtes
+        // // Wrap the canvas created above in an ImageSource object to specify it as the placemark image source.
+        // placemarkAttributes.imageSource = new WorldWind.ImageSource(canvas);
+        // placemark.attributes = placemarkAttributes;
+        //
+        // var placemarkLayer = new WorldWind.RenderableLayer(lname);
+        // // var PlacemarkSettings = //Set up the common placemark attributes.
+        // placemarkAttributes.imageScale = 0.35;
+        // placemarkAttributes.imageOffset = new WorldWind.Offset(
+        //     WorldWind.OFFSET_FRACTION, 0.5,
+        //     WorldWind.OFFSET_FRACTION, 0.5);
+        // placemarkAttributes.imageColor = WorldWind.Color.WHITE;
+        //
+        // highlightAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+        // highlightAttributes.imageScale = 50/100;
+        // placemark.highlightAttributes = highlightAttributes;
+        //
+        // // Add the placemark to the layer.
+        // placemarkLayer.addRenderable(placemark);
+        //
+        // placemarkLayer.enabled = true;
+        //
+        // // Add the placemarks layer to the World Window's layer list.
+        // globe.addLayer(placemarkLayer);
+        //
+        // CoordinateLatInfo.push(placemark.position.latitude);
+        // CoordinateLongInfo.push(placemark.position.longitude);
 
-        // Create the placemark.
-        placemark = new WorldWind.Placemark(new WorldWind.Position(location[0], location[1], 1e2), false, null);
-        //placemark.label = "This is a school" + SitesPL[i].SiteID; // NA,USA,1234
-        placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
+
+        var pinLibrary = globe.baseURL, // location of the image files
+            placemark,
+            placemarkAttributes = new WorldWind.PlacemarkAttributes(null),
+            highlightAttributes,
+            placemarkLayer = new WorldWind.RenderableLayer(lname);
 
         // Create the custom image for the placemark.
         var canvas = document.createElement("canvas"),
@@ -385,39 +440,56 @@ $(document).ready(function() {
         ctx2d.arc(c, c, outerRadius, 0, 2 * Math.PI, false);
         ctx2d.fill();
 
-        // Create the placemark attributes for the placemark.
-        placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
-        // The line of code above used to have a (placemarkAttributes) in the PlacemarkAttributtes
-        // Wrap the canvas created above in an ImageSource object to specify it as the placemark image source.
-        placemarkAttributes.imageSource = new WorldWind.ImageSource(canvas);
-        placemark.attributes = placemarkAttributes;
-
-        var placemarkLayer = new WorldWind.RenderableLayer(lname);
-        // var PlacemarkSettings = //Set up the common placemark attributes.
-        placemarkAttributes.imageScale = 0.35;
+        // Set up the common placemark attributes.
+        placemarkAttributes.imageScale = 0.2;
         placemarkAttributes.imageOffset = new WorldWind.Offset(
             WorldWind.OFFSET_FRACTION, 0.5,
-            WorldWind.OFFSET_FRACTION, 0.5);
+            WorldWind.OFFSET_FRACTION, 0.0);
         placemarkAttributes.imageColor = WorldWind.Color.WHITE;
+        // placemarkAttributes.labelAttributes.offset = new WorldWind.Offset(
+        //     WorldWind.OFFSET_FRACTION, 0.5,
+        //     WorldWind.OFFSET_FRACTION, 1.0);
+        // placemarkAttributes.labelAttributes.color = WorldWind.Color.GREEN;
+        placemarkAttributes.drawLeaderLine = true;
+        // placemarkAttributes.leaderLineAttributes.outlineColor = WorldWind.Color.BLUE;
 
-        highlightAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
-        highlightAttributes.imageScale = 50/100;
-        placemark.highlightAttributes = highlightAttributes;
+        for (var u = 0; u < globe.wwd.layers.length; u++) {
+            // Create the placemark and its label.
+            placemark = new WorldWind.Placemark(new WorldWind.Position(location[0], location[1], 1e2), true, null);
+            placemark.label = lname;
+            placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
 
-        // Add the placemark to the layer.
-        placemarkLayer.addRenderable(placemark);
+            // Create the placemark attributes for this placemark. Note that the attributes differ only by their
+            // image URL.
+            placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+            placemarkAttributes.imageSource = pinLibrary + "/NasaLogo.png";
+            placemark.attributes = placemarkAttributes;
 
-        placemarkLayer.enabled = true;
+            // Create the highlight attributes for this placemark. Note that the normal attributes are specified as
+            // the default highlight attributes so that all properties are identical except the image scale. You could
+            // instead vary the color, image, or other property to control the highlight representation.
+            highlightAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+            highlightAttributes.imageScale = 0.3;
+            placemark.highlightAttributes = highlightAttributes;
 
-        // Add the placemarks layer to the World Window's layer list.
-        globe.addLayer(placemarkLayer);
+            placemarkLayer.addRenderable(placemark);
 
-        CoordinateLatInfo.push(placemark.position.latitude);
-        CoordinateLongInfo.push(placemark.position.longitude);
+            placemarkLayer.enabled = true;
+
+            // Add the placemarks layer to the World Window's layer list.
+            globe.addLayer(placemarkLayer);
+
+            CoordinateLatInfo.push(placemark.position.latitude);
+            CoordinateLongInfo.push(placemark.position.longitude);
+
+            globe.addLayer(placemarkLayer, {
+                category: "placemark",
+                enabled: true,
+                displayName: "Potatooooo"
+            });
+
+        }
     };
-
-    // // Now set up to handle highlighting.
-    // var highlightController = new WorldWind.HighlightController(globe);
 
     var sitePopUp = function(jsonobj) {
         var sitename, sitedesc, picpath, siteurl;
@@ -446,7 +518,6 @@ $(document).ready(function() {
         popupBodyItem.append(popupBodyDesc);
         popupBodyItem.append(popupBodyImg);
         popupBodyItem.append(popupBodyURL);
-    };
 
     var handleMouseCLK = function (o) {
 
@@ -455,6 +526,8 @@ $(document).ready(function() {
         var x = o.clientX,
             y = o.clientY;
 
+        console.log(x);
+        console.log(y);
         // Perform the pick. Must first convert from window coordinates to canvas coordinates, which are
         // relative to the upper left corner of the canvas rather than the upper left corner of the page.
 
@@ -499,7 +572,4 @@ $(document).ready(function() {
 
     // Listen for mouse double clicks placemarks and then pop up a new dialog box.
     globe.wwd.addEventListener("click", handleMouseCLK);
-
-    // Listen for taps on mobile devices and then pop up a new dialog box.
-    var tapRecognizer = new WorldWind.TapRecognizer(globe, handleMouseCLK);
-});
+}});
