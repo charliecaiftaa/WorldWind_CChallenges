@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Justfat is Just Fat</title>
+    <title>Web World Wind Challenges</title>
 
     <!-- Bootstrap 4.0 CSS compiled and minified -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -15,15 +15,99 @@
 
     <!-- Custom styles and overrides -->
     <link href="custom.css" rel="stylesheet">
+
+    <!-- For the Popover -->
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">-->
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>-->
+<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>-->
+
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: auto;
+            height: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            overflow: scroll;
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+        }
+
+        .modalHeader {
+            padding: 10px 16px;
+            color: white;
+        }
+
+        #modalHeader {
+            background-color: #75b6cc;
+        }
+
+        .modal-footer {
+            padding: 10px 16px;
+            background-color: #5cb85c;
+        }
+
+        /* The Close Button */
+        .cLose {
+            color: #ff6666;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .cLose:hover,
+        .cLose:focus {
+            color: #ff0000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    </style>
 </head>
 <body>
+<div id = "myModal" class = "modal">
+    <div class = "modal-content">
+        <!-- Popup Box Header -->
+        <div class = "modalHeader">
+            <p id = "modalHeader">
+                <br>
+            </p>
+            <p><span class = "cLose">&times;</span></p>
+        </div>
+
+        <!-- Popup Box Body -->
+        <p class = "modal-body" id = "modalBody">
+
+        </p>
+
+        <!-- Popup Box Footer -->
+        <div class = "modal-footer">
+            <p></p>
+        </div>
+    </div>
+</div>
 
 <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
 
     <!--Branding icon and text-->
     <a class="navbar-brand" href="https://worldwind.arc.nasa.gov/web target=_blank">
         <img src="images/Placemark_Images/NasaLogo.png" width="40" height="30" class="d-inline-block align-top" alt="">
-        WorldWindJayS
+        WorldWindJS
     </a>
 
     <!--Hamburger menu displayed on small screens/windows-->
@@ -154,7 +238,7 @@
                         <p class="card-text">Placemark list goes here.</p>
                         <!--<div class="list-group" data-bind="template: { name: 'layer-list-template', foreach: overlayLayers}"></div>-->
                         <hr/>
-                        <div class = "list-group switch_right" data-bind = "template: { name: 'layer-list-template', foreach: placemarkLayers}" value = "no">
+                        <div class = "list-group switch_right" data-bind = "template: { name: 'layer-list-template', foreach: placemarkLayers}">
                             <!--<label>-->
                                 <!--<input value = "no"/>-->
                             <!--</label>-->
@@ -163,12 +247,22 @@
                         </div>
 
                     </div>
-                    <!--<label class="switch right">-->
-                    <input class = "switch_right myModal" type = "checkbox" value = "ko"/>
-                    <input class = "switch_right myModal" type = "checkbox" value = "ok"/>
 
-                    <!--<span class="slider round"></span>-->
-                    <!--</label>-->
+                    <label class = "switch right">
+                        <input class = "switch_right myModal myPopup" type = "checkbox" value = "ko"/>
+                    </label>
+
+                    <label class = "switch right">
+                        <input class = "wmsLayer" type = "checkbox" value = "AVHRR_CLIM_M"/>
+                    </label>
+
+                    <label class="switch right">
+                        <input class="switch_right myModal" type="checkbox" value="KHS_Turbine">
+                    </label>
+
+                    <div class="container">
+                        <a href = "#" title = "Header" data-toggle = "popover" data-trigger = "hover" data-content = "Some content">Popover</a>
+                    </div>
                 </div>
             </div>
         </div>

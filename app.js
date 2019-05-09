@@ -30,7 +30,7 @@ $(document).ready(function() {
             // Holds the next unique id to be assigned to a layer
             this.nextLayerId = 1;
 
-            this.baseURL = "../images/Placemark_Images";
+            this.baseURL = "./images/Placemark_Images";
 
             // Holds a map of category and observable timestamp pairs
             this.categoryTimestamps = new Map();
@@ -276,7 +276,8 @@ $(document).ready(function() {
     globe.addLayer(new WorldWind.Layer(), {
         category: "placemark",
         enabled: false,
-        displayName: "nooo"
+        displayName: "Potat",
+        // value: "no"
     });
 
 
@@ -300,6 +301,79 @@ $(document).ready(function() {
         $(this).closest('.collapse').collapse('hide');
     });
 
+    // Save this WMS Layer Code for Later
+
+    // WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
+    //
+    // // Web Map Service information from NASA's Near Earth Observations WMS
+    // var serviceAddress = "https://neo.sci.gsfc.nasa.gov/wms/wms?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0";
+    //
+    // var layerName = [];
+    // var preloadLayer = [];
+    //
+    // var Layers = globe.wwd.layers;
+    //
+    // $(document).ready(function () {
+    //     $(".wmsLayer").each(function (i) {
+    //         preloadLayer[i] = $(this).val();
+    //     });
+    //
+    //     var strs = preloadLayer + '';
+    //
+    //     layerName = strs.split(",");
+    //
+    //     $('.wmsLayer').click(function(){
+    //         // console.log (layers);
+    //         for (var a = 0; a < Layers.length; a++) {
+    //             if ($('.wmsLayer').is(":checkbox:checked")) {
+    //                 $(':checkbox:checked').each(function () {
+    //                     if (Layers[a].displayName === $(this).val()) {
+    //                         Layers[a].enabled = true;
+    //                         createWMSLayer();
+    //                     }
+    //                 });
+    //             }
+    //
+    //             if($('.wmsLayer').is(":not(:checked)")) {
+    //                 $(":checkbox:not(:checked)").each(function (i) {
+    //                     if (Layers[a].displayName === $(this).val()) {
+    //                         Layers[a].enabled = false;
+    //                     }
+    //                 })
+    //             }
+    //         }
+    //     });
+    // });
+    //
+    // var createWMSLayer = function (xmlDom) {
+    //     console.log (layerName);
+    //
+    //     // Create a WmsCapabilities object from the XML DOM
+    //     var wms = new WorldWind.WmsCapabilities(xmlDom);
+    //     // Retrieve a WmsLayerCapabilities object by the desired layer name
+    //     for (var n = 0; n < layerName.length; n++) {
+    //         var wmsLayerCapabilities = wms.getNamedLayer(layerName[n]);
+    //         // wmsLayerCapabilities.title = layerName[n];
+    //         // Form a configuration object from the WmsLayerCapability object
+    //         var wmsConfig = WorldWind.WmsLayer.formLayerConfiguration(wmsLayerCapabilities);
+    //         // console.log(n + "Layer: " + layerName[n]);
+    //         // Modify the configuration objects title property to a more user friendly title
+    //         // wmsConfig.title = layerName[n];
+    //         // Create the WMS Layer from the configuration object
+    //         var wmsLayer = new WorldWind.WmsLayer(wmsConfig);
+    //         // // Add the layers to WorldWind and update the layer manager
+    //         globe.wwd.addLayer(wmsLayer);
+    //         // layerManager.synchronizeLayerList();
+    //     }
+    // };
+    //
+    // // Called if an error occurs during WMS Capabilities document retrieval
+    // var logError = function (jqXhr, text, exception) {
+    //     console.log("There was a failure retrieving the capabilities document: " + text + " exception: " + exception);
+    // };
+    //
+    // $.get(serviceAddress).done(createWMSLayer).fail(logError);
+
     var laname,
         j,
         loca,
@@ -307,22 +381,22 @@ $(document).ready(function() {
         col,
         colo;
 
-    var LayerInfo = [], CoordinateLatInfo = [], CoordinateLongInfo = [], listLoca = [];
+    var LayerInfo = [], CoordinateLatInfo = [], CoordinateLongInfo = [], listLoca = [], highlightedItems = [];
 
     // This wmsLayer used to be switch_right but it's different on this project so I changed it
     $('.switch_right').click(function () {
         var CurrentToggleVal = $(this).val();
-        console.log("Initial:" + globe.wwd.layers.length);
-        console.log(CurrentToggleVal);
+        // console.log("Initial:" + globe.wwd.layers.length);
+        // console.log(CurrentToggleVal);
         for (var b = 0; b < globe.wwd.layers.length; b++) {
             if (globe.wwd.layers[b].displayName === CurrentToggleVal) {
 
                 if ($(this).prop('checked')) {
-                    console.log("open");
+                    // console.log("open");
                     globe.wwd.layers[b].enabled = true;
 
                 } else {
-                    console.log("closed");
+                    // console.log("closed");
                     globe.wwd.layers[b].enabled = false;
 
                 }
@@ -330,14 +404,11 @@ $(document).ready(function() {
 
             } else {
                 if (b === globe.wwd.layers.length - 1) {
-                    console.log("new");
+                    // console.log("new");
 
                     $.getJSON("LayerNCC.json", function (layer) {
-                        console.log("Sausage");
                         for (j = 0; j < layer.length; j++) {
-                            console.log("Banana");
                             if (CurrentToggleVal === layer[j].Layer_Name) {
-                                console.log("Potato");
                                 LayerInfo.push(layer[j]);
                                 loca = layer[j].Latitude_and_Longitude_Decimal;
                                 listLoca.push(loca);
@@ -346,7 +417,7 @@ $(document).ready(function() {
                                 colo = col.split(" ");
                                 laname = layer[j].Layer_Name;
                                 CreatePlacemarkLayer(locat, colo, laname);
-                                console.log("Ending Loop:" + globe.wwd.layers.length);
+                                // console.log("Ending Loop:" + globe.wwd.layers.length);
                                 // console.log ("displayN last: " + layers[layers.length-1].displayName);
 
                             }
@@ -359,69 +430,14 @@ $(document).ready(function() {
 
     //This is creating the placemark layer and to connect the placemark to the switch
     var CreatePlacemarkLayer = function (location, pcolor, lname) {
-        console.log("The Potato Famine was Intentional");
-        // var placemark;
-        // var placemarkAttributes;
-        // var highlightAttributes;
-        //
-        // // Create the placemark.
-        // placemark = new WorldWind.Placemark(new WorldWind.Position(location[0], location[1], 1e2), false, null);
-        // //placemark.label = "This is a school" + SitesPL[i].SiteID; // NA,USA,1234
-        // placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-        //
-        // // Create the custom image for the placemark.
-        // var canvas = document.createElement("canvas"),
-        //     ctx2d = canvas.getContext("2d"),
-        //     size = 64, c = size / 2 - 0.5, innerRadius = 5, outerRadius = 20;
-        //
-        // canvas.width = size;
-        // canvas.height = size;
-        //
-        // var gradient = ctx2d.createRadialGradient(c, c, innerRadius, c, c, outerRadius);
-        // gradient.addColorStop(0, pcolor[0]);
-        // gradient.addColorStop(0.5, pcolor[1]);
-        // gradient.addColorStop(1, pcolor[2]);
-        //
-        // ctx2d.fillStyle = gradient;
-        // ctx2d.arc(c, c, outerRadius, 0, 2 * Math.PI, false);
-        // ctx2d.fill();
-        //
-        // // Create the placemark attributes for the placemark.
-        // placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
-        // // The line of code above used to have a (placemarkAttributes) in the PlacemarkAttributtes
-        // // Wrap the canvas created above in an ImageSource object to specify it as the placemark image source.
-        // placemarkAttributes.imageSource = new WorldWind.ImageSource(canvas);
-        // placemark.attributes = placemarkAttributes;
-        //
-        // var placemarkLayer = new WorldWind.RenderableLayer(lname);
-        // // var PlacemarkSettings = //Set up the common placemark attributes.
-        // placemarkAttributes.imageScale = 0.35;
-        // placemarkAttributes.imageOffset = new WorldWind.Offset(
-        //     WorldWind.OFFSET_FRACTION, 0.5,
-        //     WorldWind.OFFSET_FRACTION, 0.5);
-        // placemarkAttributes.imageColor = WorldWind.Color.WHITE;
-        //
-        // highlightAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
-        // highlightAttributes.imageScale = 50/100;
-        // placemark.highlightAttributes = highlightAttributes;
-        //
-        // // Add the placemark to the layer.
-        // placemarkLayer.addRenderable(placemark);
-        //
-        // placemarkLayer.enabled = true;
-        //
-        // // Add the placemarks layer to the World Window's layer list.
-        // globe.addLayer(placemarkLayer);
-        //
-        // CoordinateLatInfo.push(placemark.position.latitude);
-        // CoordinateLongInfo.push(placemark.position.longitude);
+        var placemark;
+        var placemarkAttributes;
+        var highlightAttributes;
 
-
-        var pinLibrary = globe.baseURL, // location of the image files
-            placemark,
-            placemarkAttributes = new WorldWind.PlacemarkAttributes(null),
-            highlightAttributes,
-            placemarkLayer = new WorldWind.RenderableLayer(lname);
+        // Create the placemark.
+        placemark = new WorldWind.Placemark(new WorldWind.Position(location[0], location[1], 1e2), false, null);
+        //placemark.label = "This is a school" + SitesPL[i].SiteID; // NA,USA,1234
+        placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
 
         // Create the custom image for the placemark.
         var canvas = document.createElement("canvas"),
@@ -440,55 +456,112 @@ $(document).ready(function() {
         ctx2d.arc(c, c, outerRadius, 0, 2 * Math.PI, false);
         ctx2d.fill();
 
-        // Set up the common placemark attributes.
-        placemarkAttributes.imageScale = 0.2;
+        // Create the placemark attributes for the placemark.
+        placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
+        // The line of code above used to have a (placemarkAttributes) in the PlacemarkAttributtes
+        // Wrap the canvas created above in an ImageSource object to specify it as the placemark image source.
+        placemarkAttributes.imageSource = new WorldWind.ImageSource(canvas);
+        placemark.attributes = placemarkAttributes;
+
+        var placemarkLayer = new WorldWind.RenderableLayer(lname);
+        // var PlacemarkSettings = //Set up the common placemark attributes.
+        placemarkAttributes.imageScale = 0.35;
         placemarkAttributes.imageOffset = new WorldWind.Offset(
             WorldWind.OFFSET_FRACTION, 0.5,
-            WorldWind.OFFSET_FRACTION, 0.0);
+            WorldWind.OFFSET_FRACTION, 0.5);
         placemarkAttributes.imageColor = WorldWind.Color.WHITE;
-        // placemarkAttributes.labelAttributes.offset = new WorldWind.Offset(
+
+        highlightAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+        highlightAttributes.imageScale = 50/100;
+        placemark.highlightAttributes = highlightAttributes;
+
+        // Add the placemark to the layer.
+        placemarkLayer.addRenderable(placemark);
+
+        placemarkLayer.enabled = true;
+
+        // Add the placemarks layer to the World Window's layer list.
+        globe.addLayer(placemarkLayer);
+
+        CoordinateLatInfo.push(placemark.position.latitude);
+        CoordinateLongInfo.push(placemark.position.longitude);
+
+
+        // var pinLibrary = globe.baseURL, // location of the image files
+        //     placemark,
+        //     placemarkAttributes = new WorldWind.PlacemarkAttributes(null),
+        //     highlightAttributes,
+        //     placemarkLayer = new WorldWind.RenderableLayer(lname);
+        //
+        // // Create the custom image for the placemark.
+        // var canvas = document.createElement("canvas"),
+        //     ctx2d = canvas.getContext("2d"),
+        //     size = 64, c = size / 2 - 0.5, innerRadius = 5, outerRadius = 20;
+        //
+        // canvas.width = size;
+        // canvas.height = size;
+        //
+        // var gradient = ctx2d.createRadialGradient(c, c, innerRadius, c, c, outerRadius);
+        // gradient.addColorStop(0, pcolor[0]);
+        // gradient.addColorStop(0.5, pcolor[1]);
+        // gradient.addColorStop(1, pcolor[2]);
+        //
+        // ctx2d.fillStyle = gradient;
+        // ctx2d.arc(c, c, outerRadius, 0, 2 * Math.PI, false);
+        // ctx2d.fill();
+        //
+        // // Set up the common placemark attributes.
+        // placemarkAttributes.imageScale = 0.2;
+        // placemarkAttributes.imageOffset = new WorldWind.Offset(
         //     WorldWind.OFFSET_FRACTION, 0.5,
-        //     WorldWind.OFFSET_FRACTION, 1.0);
-        // placemarkAttributes.labelAttributes.color = WorldWind.Color.GREEN;
-        placemarkAttributes.drawLeaderLine = true;
-        // placemarkAttributes.leaderLineAttributes.outlineColor = WorldWind.Color.BLUE;
-
-        for (var u = 0; u < globe.wwd.layers.length; u++) {
-            // Create the placemark and its label.
-            placemark = new WorldWind.Placemark(new WorldWind.Position(location[0], location[1], 1e2), true, null);
-            placemark.label = lname;
-            placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-
-            // Create the placemark attributes for this placemark. Note that the attributes differ only by their
-            // image URL.
-            placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
-            placemarkAttributes.imageSource = pinLibrary + "/NasaLogo.png";
-            placemark.attributes = placemarkAttributes;
-
-            // Create the highlight attributes for this placemark. Note that the normal attributes are specified as
-            // the default highlight attributes so that all properties are identical except the image scale. You could
-            // instead vary the color, image, or other property to control the highlight representation.
-            highlightAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
-            highlightAttributes.imageScale = 0.3;
-            placemark.highlightAttributes = highlightAttributes;
-
-            placemarkLayer.addRenderable(placemark);
-
-            placemarkLayer.enabled = true;
-
-            // Add the placemarks layer to the World Window's layer list.
-            globe.addLayer(placemarkLayer);
-
-            CoordinateLatInfo.push(placemark.position.latitude);
-            CoordinateLongInfo.push(placemark.position.longitude);
-
-            globe.addLayer(placemarkLayer, {
-                category: "placemark",
-                enabled: true,
-                displayName: "Potatooooo"
-            });
-
-        }
+        //     WorldWind.OFFSET_FRACTION, 0.0);
+        // placemarkAttributes.imageColor = WorldWind.Color.WHITE;
+        // // placemarkAttributes.labelAttributes.offset = new WorldWind.Offset(
+        // //     WorldWind.OFFSET_FRACTION, 0.5,
+        // //     WorldWind.OFFSET_FRACTION, 1.0);
+        // // placemarkAttributes.labelAttributes.color = WorldWind.Color.GREEN;
+        // placemarkAttributes.drawLeaderLine = true;
+        // // placemarkAttributes.leaderLineAttributes.outlineColor = WorldWind.Color.BLUE;
+        //
+        // // for (var u = 0; u < globe.wwd.layers.length; u++) {
+        //     console.log("Plants are STEALING the FOOD");
+        //     // Create the placemark and its label.
+        //     placemark = new WorldWind.Placemark(new WorldWind.Position(location[0], location[1], 1e2), true, null);
+        //     console.log(placemark);
+        //     placemark.label = lname;
+        //     placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
+        //
+        //     // Create the placemark attributes for this placemark. Note that the attributes differ only by their
+        //     // image URL.
+        //     placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+        //     placemarkAttributes.imageSource = pinLibrary + "/NasaLogo.png";
+        //     placemark.attributes = placemarkAttributes;
+        //     console.log(placemarkAttributes);
+        //
+        //     // Create the highlight attributes for this placemark. Note that the normal attributes are specified as
+        //     // the default highlight attributes so that all properties are identical except the image scale. You could
+        //     // instead vary the color, image, or other property to control the highlight representation.
+        //     highlightAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+        //     highlightAttributes.imageScale = 0.3;
+        //     placemark.highlightAttributes = highlightAttributes;
+        //
+        //     placemarkLayer.addRenderable(placemark);
+        //
+        //     placemarkLayer.enabled = true;
+        //
+        //     // Add the placemarks layer to the World Window's layer list.
+        //     // globe.addLayer(placemarkLayer);
+        //
+        //     CoordinateLatInfo.push(placemark.position.latitude);
+        //     CoordinateLongInfo.push(placemark.position.longitude);
+        //
+        //     globe.addLayer(placemarkLayer, {
+        //         category: "placemark",
+        //         enabled: true,
+        //         displayName: "Potatooooo"
+        //     });
+        //
+        // // }
     };
 
     var sitePopUp = function(jsonobj) {
@@ -501,9 +574,9 @@ $(document).ready(function() {
 
             if (listLoca[z] === latlong) {
                 sitename = LayerInfo[z].Site_Name;
-                picpath = "../images/Placemark_Images/" + LayerInfo[z].Picture_Location;
+                picpath = "./images/Placemark_Images/" + LayerInfo[z].Picture_Location;
                 sitedesc = LayerInfo[z].Site_Description;
-                siteurl = LayerInfo[z].Link_to_site_Location;
+                siteurl = LayerInfo[z].Link_to_site_location;
                 break;
             }
         }
@@ -511,13 +584,20 @@ $(document).ready(function() {
         //Insert site information into indexTest.html.
         var popupBodyName = $('<p class="site-name"><h4>' + sitename + '</h4></p>');
         var popupBodyDesc = $('<p class="site-description">' + sitedesc + '</p><br>');
-        var popupBodyImg = $('<img class="site-img" src="' + picpath + '" width=100% height=auto /><br>');
+        var popupBodyImg = $('<img alt="Image" class="site-img" src="' + picpath + '" width=100% height=auto /><br>');
         var popupBodyURL = $('<p class="site-URL">Please click <a href="' + siteurl + '" target="_blank"><span id="href"><b>here</b></span></a> for more detailed information</p>');
 
         popupBodyItem.append(popupBodyName);
         popupBodyItem.append(popupBodyDesc);
         popupBodyItem.append(popupBodyImg);
         popupBodyItem.append(popupBodyURL);
+
+        // console.log(popupBodyName);
+        // console.log(popupBodyDesc);
+        // console.log(popupBodyImg);
+        // console.log(popupBodyURL);
+        // console.log(popupBodyItem);
+    };
 
     var handleMouseCLK = function (o) {
 
@@ -526,8 +606,8 @@ $(document).ready(function() {
         var x = o.clientX,
             y = o.clientY;
 
-        console.log(x);
-        console.log(y);
+        // console.log(x);
+        // console.log(y);
         // Perform the pick. Must first convert from window coordinates to canvas coordinates, which are
         // relative to the upper left corner of the canvas rather than the upper left corner of the page.
 
@@ -536,22 +616,21 @@ $(document).ready(function() {
         // console.log(pickList.objects[0]);
         for (var q = 0; q < pickList.objects.length; q++) {
             var pickedPL = pickList.objects[q].userObject;
-            // console.log (pickedPL);
+            // Original Code (pickedPL instanceof globe.wwd.layers) New Code (globe.wwd.layers.indexOf(pickedPL) !== -1)
             if (pickedPL instanceof WorldWind.Placemark) {
-                console.log (pickedPL.position.latitude);
+                // console.log(pickedPL.position);
                 sitePopUp(pickedPL.position);
-                //alert("It Worked");
+                // alert("It Worked");
 
                 $(document).ready(function () {
-                    console.log("It's connected");
+                    // console.log("It's connected");
                     // Get the modal
                     var modal = document.getElementById('myModal');
 
                     // Get the <span> element that closes the modal
-                    var span = document.getElementsByClassName("close")[0];
+                    var span = document.getElementsByClassName("cLose")[0];
 
                     // When the user clicks the button, open the modal
-
                     modal.style.display = "block";
 
                     // When the user clicks on <span> (x), close the modal
@@ -561,7 +640,7 @@ $(document).ready(function() {
 
                     // When the user clicks anywhere outside of the modal, close it
                     window.onclick = function(event) {
-                        if (event.target == modal) {
+                        if (event.target === modal) {
                             modal.style.display = "none";
                         }
                     };
@@ -570,6 +649,80 @@ $(document).ready(function() {
         }
     };
 
+    var handleMouseMove = function (o) {
+        // The input argument is either an Event or a TapRecognizer. Both have the same properties for determining
+        // the mouse or tap location.
+        var x = o.clientX,
+            y = o.clientY;
+
+        var redrawRequired = highlightedItems.length > 0; // must redraw if we de-highlight previously picked items
+
+        // De-highlight any previously highlighted placemarks.
+        for (var h = 0; h < highlightedItems.length; h++) {
+            highlightedItems[h].highlighted = false;
+        }
+        highlightedItems = [];
+
+        // Perform the pick. Must first convert from window coordinates to canvas coordinates, which are
+        // relative to the upper left corner of the canvas rather than the upper left corner of the page.
+
+        var pickList = globe.wwd.pick(globe.wwd.canvasCoordinates(x, y));
+
+        // Highlight the items picked by simply setting their highlight flag to true.
+        if (pickList.objects.length > 0) {
+            for (var p = 0; p < pickList.objects.length; p++) {
+                pickList.objects[p].userObject.highlighted = true;
+
+                // Keep track of highlighted items in order to de-highlight them later.
+                highlightedItems.push(pickList.objects[p].userObject);
+
+                // Detect whether the placemark's label was picked. If so, the "labelPicked" property is true.
+                // If instead the user picked the placemark's image, the "labelPicked" property is false.
+                // Applications might use this information to determine whether the user wants to edit the label
+                // or is merely picking the placemark as a whole.
+                if (pickList.objects[p].labelPicked) {
+                    console.log("Label picked");
+                }
+            }
+        }
+
+        // Update the window if we changed anything.
+        if (pickList.objects.length > 0) {
+            redrawRequired = true;
+        }
+
+        if (redrawRequired) {
+            globe.wwd.redraw(); // redraw to make the highlighting changes take effect on the screen
+        }
+
+        $(document).ready(function () {
+            var popover = document.getElementById('myPopover');
+
+            // When the user clicks the button, open the modal
+            // popOver.style.display = "block";
+            //
+            // When the user clicks anywhere outside of the modal, close it
+            // window.onclick = function(event) {
+            //     if (event.target === modal) {
+            //         popOver.style.display = "none";
+            //     }
+            // };
+        });
+
+        var popup = document.getElementById('myPopup');
+
+        // When the user clicks on div, open the popup
+        function myFunction() {
+            popup.classList.toggle("show");
+        }
+    };
+
     // Listen for mouse double clicks placemarks and then pop up a new dialog box.
     globe.wwd.addEventListener("click", handleMouseCLK);
-}});
+
+    globe.wwd.addEventListener("mousemove", handleMouseMove);
+
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();
+    });
+});
